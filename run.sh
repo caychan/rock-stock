@@ -17,9 +17,9 @@ mvn clean install -Dmaven.test.skip=true -P test
 cd target/
 #执行复制
 mv rock-stock-0.0.1-SNAPSHOT.jar ${APP_NAME}
-cp -r ${APP_NAME} /usr/local/rock-stock
+cp -r ${APP_NAME} ~/project/log
 echo "开始进行复制"
-logline=`cat /usr/local/rock-stock/console.log | wc -l`
+logline=`cat ~/project/log/console.log | wc -l`
 #检查程序是否在运行
 is_exist(){
 pid=`ps -ef|grep $APP_NAME|grep -v grep|awk '{print $2}' `
@@ -36,16 +36,16 @@ kill -9 $pid
 else
 echo "${APP_NAME} is not running"
 fi
-cd /usr/local/rock-stock
+cd ~/project/log
 is_exist
 if [ $? -eq "0" ]; then
 echo "${APP_NAME} is already running. pid=${pid} ."
 else
-nohup java -jar ${APP_NAME} > /usr/local/rock-stockv/console.log 2>&1 &
+nohup java -jar ${APP_NAME} > ~/project/log/console.log 2>&1 &
 echo "程序已启动..."
 sleep 1;
-tail -10f /usr/local/rock-stock/console.log | sed '/Starting Quartz Scheduler now/Q'
-cat /usr/local/rock-stock/console.log | sed -n ''"$logline"',${/Starting Quartz Scheduler now/, +3p}'
+tail -10f ~/project/log/console.log | sed '/Starting Quartz Scheduler now/Q'
+cat ~/project/log/console.log | sed -n ''"$logline"',${/Starting Quartz Scheduler now/, +3p}'
 fi
 is_exist
 if [ $? -eq "0" ]; then
