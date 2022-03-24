@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #项目路径（自定义）
-CODE_PATH=~/project/rock-stock
+CODE_PATH=~/project/rock-stock/
 APP_NAME=rock-stock.jar
 echo "开始拉取最新代码"
 #首先进行编译
@@ -41,13 +41,18 @@ else
 echo "${APP_NAME} is not running"
 fi
 
-nohup java -jar ${APP_NAME} > ~/project/console.log 2>&1 &
+cd "${CODE_PATH}"
+pwd
+ll
+echo "java -jar ${APP_NAME}"
+java -jar ${APP_NAME}
+#nohup java -jar ${APP_NAME} > ~/project/console.log 2>&1 &
 
 is_exist
 if [ $? -eq "0" ]; then
 echo "${APP_NAME} is already running. pid=${pid} ."
 else
-echo "${APP_NAME} is not running"
+echo "${APP_NAME} start failed"
 fi
 
 #exit
