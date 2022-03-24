@@ -9,6 +9,7 @@ import com.cay.rockstock.spider.SpiderProcessor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class StockController {
 
     private static final AtomicBoolean running = new AtomicBoolean(false);
 
-    @PostMapping(value = "/spider")
+    @GetMapping(value = "/spider")
     public CommonResponse startSpider() {
         log.info("process spider task, running:{}", running.get());
         if (running.get()) {
