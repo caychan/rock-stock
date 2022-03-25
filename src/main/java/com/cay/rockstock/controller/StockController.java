@@ -3,6 +3,7 @@ package com.cay.rockstock.controller;
 
 import com.cay.rockstock.beans.CommonResponse;
 import com.cay.rockstock.beans.Response;
+import com.cay.rockstock.config.Constants;
 import com.cay.rockstock.config.redis.RedisKeys;
 import com.cay.rockstock.service.RedisService;
 import com.cay.rockstock.spider.SpiderProcessor;
@@ -39,12 +40,22 @@ public class StockController {
 
     @GetMapping(value = "/spider")
     public CommonResponse startSpider() {
-        log.info("process spider task, running:{}", running.get());
+        boolean lock = redisService.tryLock("start_spider", Constants.ONE_HOUR_SECONDS);
+        log.info("process spider task, running:{}", lock);
+        if (!lock) {
+            return CommonResponse.fail();
+        }
+        commonExecutor.submit(() -> spiderProcessor.startSpider());
+        return CommonResponse.success();
+    }
+
+    @GetMapping(value = "/local_spider")
+    public CommonResponse startLocalSpider() {
+        log.info("process local spider task, running:{}", running.get());
         if (running.get()) {
             return CommonResponse.fail();
         }
         running.set(true);
-//        redisService.trySimpleLock(RedisKeys.STOCK_STARTER);
         commonExecutor.submit(() -> spiderProcessor.startSpider());
         return CommonResponse.success();
     }

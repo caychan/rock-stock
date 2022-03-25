@@ -24,7 +24,7 @@ public class StockInfoTest {
     @Test
     public void testInsert() {
         StockInfo stockInfo = new StockInfo();
-        stockInfo.setCode("000002");
+        stockInfo.setCode("000004");
         stockInfo.setName("平安");
 //        stockInfo.setCreateTime(new Date());
 //        stockInfo.setUpdateTime(new Date());
