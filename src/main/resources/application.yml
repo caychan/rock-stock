@@ -11,7 +11,7 @@ spring:
 #    driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/stock?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password:
+    password: 12345678
     type: com.zaxxer.hikari.HikariDataSource #当前使用的数据源 Hikari
     hikari:
       minimum-idle: 10 #池中维护的最小空闲连接数 默认10 根据实际情况来
