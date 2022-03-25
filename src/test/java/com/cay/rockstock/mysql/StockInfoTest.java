@@ -1,7 +1,7 @@
 package com.cay.rockstock.mysql;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.cay.rockstock.beans.entity.StockInfo;
-import com.cay.rockstock.redis.UserEntity;
 import com.cay.rockstock.service.StockInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -9,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Date;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -24,7 +22,7 @@ public class StockInfoTest {
     @Test
     public void testInsert() {
         StockInfo stockInfo = new StockInfo();
-        stockInfo.setCode("000004");
+        stockInfo.setCode("000005");
         stockInfo.setName("平安");
 //        stockInfo.setCreateTime(new Date());
 //        stockInfo.setUpdateTime(new Date());
@@ -36,13 +34,16 @@ public class StockInfoTest {
     @Test
     public void testUpdate() {
         StockInfo stockInfo = new StockInfo();
-        stockInfo.setCode("000002");
-        stockInfo.setName("平安");
+        stockInfo.setCode("000001");
+        stockInfo.setName("平安223");
+        UpdateWrapper<StockInfo> wrapper = new UpdateWrapper<>();
+        wrapper.eq("code", stockInfo.getCode());
+
 //        stockInfo.setCreateTime(new Date());
 //        stockInfo.setUpdateTime(new Date());
 
-        boolean res = stockInfoService.save(stockInfo);
-        log.info("save result: {}, {}", res, stockInfo);
+        boolean res = stockInfoService.update(stockInfo, wrapper);
+        log.info("updateById result: {}, {}", res, stockInfo);
     }
 
 }

@@ -5,15 +5,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@TableName(value = "stock_info")
+@TableName(value = "stock")
 public class Stock {
 
     //主键
     @TableId
-    private int id;
+    private Integer id;
 
     //代码
     @TableField
@@ -25,59 +26,67 @@ public class Stock {
 
     //当前价格
     @TableField
-    private Float price;
+    private BigDecimal price;
 
     //昨收
     @TableField
-    private Float lastClose;
+    private BigDecimal lastClose;
 
     //今开
     @TableField
-    private Float open;
+    private BigDecimal open;
 
     //今收
     @TableField
-    private Float close;
+    private BigDecimal close;
 
     //今高
     @TableField
-    private Float high;
+    private BigDecimal high;
 
     //今低
     @TableField
-    private Float low;
+    private BigDecimal low;
+
+    //涨跌额
+    @TableField
+    private BigDecimal riseValue;
 
     //涨幅
     @TableField
-    private Float riseRatio;
+    private BigDecimal riseRatio;
+
+    //振幅
+    @TableField
+    private BigDecimal swingRatio;
 
     //总市值
     @TableField
-    private Double totalMarketValue;
+    private BigDecimal totalMarketValue;
 
     //流通市值
     @TableField
-    private Double circulatingMarketValue;
+    private BigDecimal circulatingMarketValue;
 
     //成交额
     @TableField
-    private Float tradeValue;
+    private BigDecimal tradeValue;
 
     //成交量
     @TableField
-    private Float tradeVolume;
+    private BigDecimal tradeVolume;
 
     //换手率
     @TableField
-    private Float turnoverRatio;
+    private BigDecimal turnoverRatio;
 
     //市净率
     @TableField
-    private Float bookRatio;
+    private BigDecimal bookRatio;
 
     //市盈率
     @TableField
-    private Float earnRatio;
+    private BigDecimal earnRatio;
 
     //资金流向
     @TableField

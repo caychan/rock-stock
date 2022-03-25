@@ -3,18 +3,11 @@ package com.cay.rockstock.redis;
 import com.alibaba.fastjson.JSON;
 import com.cay.rockstock.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
-
-import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 @Slf4j
@@ -25,6 +18,13 @@ public class JedisTests {
     @Autowired
     private RedisService redisService;
 
+
+    @Test
+    public void testMget() {
+        jedis.mset("k1", "v1", "k2", "v2");
+        System.out.println(jedis.get("k1"));
+        System.out.println(jedis.mget("k1", "k3", "k2"));
+    }
 
     @Test
     public void testSimpleLock() {

@@ -47,16 +47,5 @@ public class SpiderProcessor implements PageProcessor {
     }
 
 
-    public static void start() {
-        log.info("start spider...");
-        List<String> urls = StockConfig.stockIds.stream().map(id->"http://info.stcn.com/dc/stock/?stockcode="+id).collect(Collectors.toList());
-        Spider.create(new SpiderProcessor()).addUrl(urls.toArray(new String[]{})).thread(1).run();
-        log.info("done spider...");
-    }
-
-    public static void main(String[] args) {
-        log.info("hello");
-        start();
-    }
 
 }

@@ -1,14 +1,12 @@
 package com.cay.rockstock.service;
 
 
-import com.cay.rockstock.beans.CommonResponse;
 import com.cay.rockstock.config.redis.RedisKeys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 

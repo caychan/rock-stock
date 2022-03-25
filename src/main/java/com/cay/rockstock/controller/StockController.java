@@ -2,27 +2,19 @@ package com.cay.rockstock.controller;
 
 
 import com.cay.rockstock.beans.CommonResponse;
-import com.cay.rockstock.beans.Response;
 import com.cay.rockstock.config.Constants;
-import com.cay.rockstock.config.redis.RedisKeys;
+import com.cay.rockstock.config.StockConfig;
 import com.cay.rockstock.service.RedisService;
 import com.cay.rockstock.spider.SpiderProcessor;
-import lombok.extern.java.Log;
+import com.cay.rockstock.spider.StcnSpider;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.params.SetParams;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @RestController
@@ -30,6 +22,8 @@ public class StockController {
 
     @Resource
     private SpiderProcessor spiderProcessor;
+    @Resource
+    private StcnSpider stcnSpider;
     @Resource(name = "commonExecutor")
     private ExecutorService commonExecutor;
     @Resource
@@ -41,11 +35,12 @@ public class StockController {
     @GetMapping(value = "/spider")
     public CommonResponse startSpider() {
         boolean lock = redisService.tryLock("start_spider", Constants.ONE_HOUR_SECONDS);
+        redisService.deleteLock("start_spider");
         log.info("process spider task, running:{}", lock);
         if (!lock) {
             return CommonResponse.fail();
         }
-        commonExecutor.submit(() -> spiderProcessor.startSpider());
+        commonExecutor.submit(() -> stcnSpider.startSpider(StockConfig.stockIds));
         return CommonResponse.success();
     }
 
