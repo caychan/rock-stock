@@ -47,8 +47,6 @@ echo "${APP_NAME} is not running"
 fi
 
 cd "${JAR_PATH}"
-pwd
-ll
 echo "java -jar ${JAR_PATH}${APP_NAME}"
 nohup java -jar ${JAR_PATH}${APP_NAME} > ~/project/console.log 2>&1 &
 #nohup java -jar ${APP_NAME} > ~/project/console.log 2>&1 &
