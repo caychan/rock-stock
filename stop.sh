@@ -1,5 +1,10 @@
 #!/bin/bash
 
-pid=`ps -ef|grep $APP_NAME|grep -v grep|awk '{print $2}' `
-
-sudo kill "${pid}"
+PID=$(ps -ef | grep rock-stock | grep -v grep | awk '{ print $2 }')
+if [ -z "$PID" ]
+then
+    echo Application is already stopped
+else
+    echo kill $PID
+    kill $PID
+fi
