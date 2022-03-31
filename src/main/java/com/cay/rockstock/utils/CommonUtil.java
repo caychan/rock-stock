@@ -17,4 +17,12 @@ public class CommonUtil {
     public static int getDate() {
         return NumberUtils.toInt(LocalDate.now().format(FORMATTER));
     }
+
+    public static void sleep(long mills) {
+        try {
+            Thread.sleep(mills);
+        } catch (InterruptedException e) {
+            log.warn("thread sleep interrupted:{}", Thread.currentThread().getName());
+        }
+    }
 }

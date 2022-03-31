@@ -36,7 +36,7 @@ public class StockTest {
 
     @Test
     public void testSpider() {
-        stcnSpider.startSpider(Lists.newArrayList("000001", "0000002", "0000003"));
+        stcnSpider.startSpider(Lists.newArrayList("000006", "0000007"));
     }
 
 

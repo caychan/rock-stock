@@ -10,6 +10,7 @@ import com.cay.rockstock.spider.pipeline.StcnPipeline;
 import com.cay.rockstock.utils.CommonUtil;
 import com.cay.rockstock.utils.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,8 +35,6 @@ public class StcnSpider implements PageProcessor {
     public static final String URL_PREFIX = "http://info.stcn.com/dc/stock/?stockcode=";
     private final Site site = Site.me().setCharset(StandardCharsets.UTF_8.name()).setRetryTimes(1).setSleepTime(5000).setTimeOut(3000);
 
-    @Resource
-    private ExecutorService commonExecutor;
 
     @Override
     public void process(Page page) {
@@ -44,6 +43,11 @@ public class StcnSpider implements PageProcessor {
             //股票代码
             String code = page.getHtml().xpath("/html/body/div[3]/div[2]/div[1]/i/text()").get();
             stock.setCode(code);
+
+            if (StringUtils.isEmpty(code)) {
+                log.warn("no stock info get: {}", page.getUrl().get());
+                return;
+            }
 
             //股票名称
             String name = page.getHtml().xpath("//html/body/div[3]/div[2]/div[1]/text()").get();
@@ -120,11 +124,11 @@ public class StcnSpider implements PageProcessor {
             stock.setUpdateTime(new Date());
 
             page.putField("stock", stock);
-
-            Thread.sleep(ThreadLocalRandom.current().nextInt(3000));
         } catch (Exception e) {
             log.error("process stcn spider error:{}", page.getUrl().get(), e);
             e.printStackTrace();
+        } finally {
+            CommonUtil.sleep(ThreadLocalRandom.current().nextInt(3000, 13000));
         }
     }
 
@@ -136,14 +140,13 @@ public class StcnSpider implements PageProcessor {
     public void startSpider(List<String> ids) {
         log.info("start stcn spider...");
         List<String> urls = ids.stream().map(id -> URL_PREFIX + id).collect(Collectors.toList());
-        Spider.create(new StcnSpider())
+        Spider spider = Spider.create(new StcnSpider())
                 .addUrl(urls.toArray(new String[]{}))
-                .setSpawnUrl(false)
                 .setExitWhenComplete(true)
-                .setExecutorService(commonExecutor)
                 .addPipeline(new StcnPipeline())
-                .thread(1)
-                .run();
+                .thread(1);
+        spider.run();
+        spider.close();
         log.info("done stcn spider...");
     }
 

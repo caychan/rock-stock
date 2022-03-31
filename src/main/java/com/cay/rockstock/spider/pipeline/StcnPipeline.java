@@ -16,6 +16,7 @@ public class StcnPipeline implements Pipeline {
     public void process(ResultItems resultItems, Task task) {
         Stock stock = resultItems.get("stock");
         if (stock == null || StringUtils.isEmpty(stock.getCode())) {
+            log.info("save stock, no result:{}, {}", stock, resultItems.getRequest().getUrl());
             return;
         }
 

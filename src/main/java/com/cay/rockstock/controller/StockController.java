@@ -4,10 +4,10 @@ package com.cay.rockstock.controller;
 import com.cay.rockstock.beans.CommonResponse;
 import com.cay.rockstock.config.Constants;
 import com.cay.rockstock.config.StockConfig;
+import com.cay.rockstock.config.redis.RedisKeys;
 import com.cay.rockstock.service.RedisService;
 import com.cay.rockstock.spider.SpiderProcessor;
 import com.cay.rockstock.spider.StcnSpider;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,13 +34,15 @@ public class StockController {
 
     @GetMapping(value = "/spider")
     public CommonResponse startSpider() {
-        boolean lock = redisService.tryLock("start_spider", Constants.ONE_HOUR_SECONDS);
-        redisService.deleteLock("start_spider");
+        boolean lock = redisService.tryLock(RedisKeys.STOCK_STARTER, Constants.ONE_HOUR_SECONDS);
         log.info("process spider task, running:{}", lock);
         if (!lock) {
             return CommonResponse.fail();
         }
-        commonExecutor.submit(() -> stcnSpider.startSpider(StockConfig.stockIds));
+        commonExecutor.submit(() -> {
+            stcnSpider.startSpider(StockConfig.stockIds);
+            redisService.deleteLock(RedisKeys.STOCK_STARTER);
+        });
         return CommonResponse.success();
     }
 
